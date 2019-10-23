@@ -3,8 +3,14 @@
   <PropertyGroup>
     <LangVersion>7.3</LangVersion>
     <!-- https://github.com/dotnet/roslyn/issues/32287
-     Warning AD0001 Analyzer 'Microsoft.CodeAnalysis.CSharp.RemoveUnusedParametersAndValues.CSharpRemoveUnusedParametersAndValuesDiagnosticAnalyzer' threw an exception of type 'System.NullReferenceException' -->
-    <NoWarn>AD0001;NU1701</NoWarn>
+     Warning AD0001 Analyzer 'Microsoft.CodeAnalysis.CSharp.RemoveUnusedParametersAndValues.CSharpRemoveUnusedParametersAndValuesDiagnosticAnalyzer' threw an exception of type 'System.NullReferenceException'
+     "Resolved" by adding Microsoft.CodeAnalysis.Analyzers... as per: https://github.com/dotnet/roslyn-analyzers/issues/2961#issuecomment-545438365
+     TODO: TBD: pending clarification re: version alignment concerns, i.e. with 15.9 generation bits. -->
+    <NoWarn>NU1701</NoWarn>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <RootNamespace>Kingdom.Roslyn.Compilation.Services</RootNamespace>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Platform)' == 'AnyCPU'">
