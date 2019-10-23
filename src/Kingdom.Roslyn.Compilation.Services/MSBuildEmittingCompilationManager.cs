@@ -22,7 +22,8 @@ namespace Kingdom.Roslyn.Compilation.Services
         /// <summary>
         /// Default Public Constructor.
         /// </summary>
-        public MSBuildEmittingCompilationManager()
+        public MSBuildEmittingCompilationManager(string configuration = Release)
+            : base(configuration)
         {
         }
 
@@ -30,7 +31,7 @@ namespace Kingdom.Roslyn.Compilation.Services
         /// Public Constructor.
         /// </summary>
         /// <param name="workspaceProperties"></param>
-        public MSBuildEmittingCompilationManager(IWorkspacePropertiesDictionary workspaceProperties)
+        public MSBuildEmittingCompilationManager(IWorkspacePropertiesDictionary workspaceProperties, string configuration = Release)
             : base(workspaceProperties)
         {
         }

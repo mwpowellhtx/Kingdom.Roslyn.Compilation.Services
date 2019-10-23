@@ -5,6 +5,8 @@ namespace Kingdom.Roslyn.Compilation.Services
 {
     using Microsoft.CodeAnalysis;
     using Microsoft.CodeAnalysis.MSBuild;
+    using WorkspacePropertiesDictionary = Dictionary<string, string>;
+    using IWorkspacePropertiesDictionary = IDictionary<string, string>;
 
     // TODO: TBD: could potentially even deliver this one as a separate package as well...
     // ReSharper disable once InconsistentNaming
@@ -20,11 +22,26 @@ namespace Kingdom.Roslyn.Compilation.Services
         /// <inheritdoc />
         protected override Lazy<MSBuildWorkspace> LazyWorkspace { get; }
 
+        private readonly IWorkspacePropertiesDictionary _workspaceProperties;
+
+        /// <summary>
+        /// Override in order to add different <see cref="WorkspaceProperties"/> as needed.
+        /// Adds the <see cref="CompilationManager.Configuration"/> property in the specified
+        /// value by default.
+        /// </summary>
+        /// <param name="workspaceProperties"></param>
+        /// <returns></returns>
+        protected virtual IWorkspacePropertiesDictionary PrepareWorkspaceProperties(IWorkspacePropertiesDictionary workspaceProperties)
+        {
+            workspaceProperties[nameof(Configuration)] = Configuration;
+            return workspaceProperties;
+        }
+
         // ReSharper disable once RedundantEmptyObjectOrCollectionInitializer
         /// <summary>
         /// Override or Add <see cref="Workspace"/> Property items to the Manager.
         /// </summary>
-        public virtual IDictionary<string, string> WorkspaceProperties { get; } = new Dictionary<string, string> { };
+        public IWorkspacePropertiesDictionary WorkspaceProperties => PrepareWorkspaceProperties(_workspaceProperties);
 
         //protected override Solution Solution => base.Solution;
 
@@ -32,18 +49,26 @@ namespace Kingdom.Roslyn.Compilation.Services
         /// <summary>
         /// Default Public Constructor.
         /// </summary>
-        public MSBuildCompilationManager()
-            : this(new Dictionary<string, string> { })
+        /// <param name="configuration">A caller provided Configuration.
+        /// The default is <see cref="CompilationManager.Release"/>.</param>
+        public MSBuildCompilationManager(string configuration = Release)
+            : this(new WorkspacePropertiesDictionary { }, configuration)
         {
         }
 
         /// <summary>
         /// Public Constructor.
         /// </summary>
-        /// <param name="workspaceProperties"></param>
-        public MSBuildCompilationManager(IDictionary<string, string> workspaceProperties)
+        /// <param name="workspaceProperties">Subscribers may furnish their own set of Workspace
+        /// Properties for use throughout the build cycle.</param>
+        /// <param name="configuration">A caller provided Configuration.
+        /// The default is <see cref="CompilationManager.Release"/>.</param>
+        public MSBuildCompilationManager(IWorkspacePropertiesDictionary workspaceProperties
+            , string configuration = Debug)
+            : base(configuration)
         {
-            Initialize(workspaceProperties);
+            // ReSharper disable once RedundantEmptyObjectOrCollectionInitializer
+            _workspaceProperties = workspaceProperties ?? new WorkspacePropertiesDictionary { };
 
             LazyWorkspace = new Lazy<MSBuildWorkspace>(() => MSBuildWorkspace.Create(WorkspaceProperties));
 
@@ -53,48 +78,6 @@ namespace Kingdom.Roslyn.Compilation.Services
             //new MSBuildWorkspace().OpenSolutionAsync("")
 
             // TODO: TBD: then what to do about "sources", never mind "solution", "projects", etc...
-        }
-
-        /// <inheritdoc />
-        protected override IEnumerable<string> PreprocessorSymbols
-        {
-            get
-            {
-
-#if DEBUG // Which keeps our #if/#else/#endif triplets better organized in a single place.
-                yield return "DEBUG";
-#else // DEBUG
-                yield break;
-#endif // DEBUG
-
-            }
-        }
-
-        static MSBuildCompilationManager()
-        {
-
-#if DEBUG
-            Configuration = "Debug";
-#else
-            Configuration = "Release";
-#endif
-
-        }
-
-        /// <summary>
-        /// Confers the Configuration based on the Host Project Build Configuration.
-        /// </summary>
-        public static string Configuration { get; }
-
-        private void Initialize(IDictionary<string, string> workspaceProperties)
-        {
-            // Always Build in this Configuration, regardless.
-            workspaceProperties[nameof(Configuration)] = Configuration;
-
-            foreach (var x in workspaceProperties)
-            {
-                WorkspaceProperties.Add(x);
-            }
         }
     }
 }

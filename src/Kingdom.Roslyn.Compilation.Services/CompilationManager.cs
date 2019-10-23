@@ -15,6 +15,30 @@ namespace Kingdom.Roslyn.Compilation.Services
     public abstract class CompilationManager : IDisposable
     {
         /// <summary>
+        /// &quot;Debug&quot;
+        /// </summary>
+        public const string Debug = nameof(Debug);
+
+        /// <summary>
+        /// &quot;Release&quot;
+        /// </summary>
+        public const string Release = nameof(Release);
+
+        /// <summary>
+        /// Gets or Sets the Build Configuration. The Default is <see cref="Release"/>.
+        /// </summary>
+        public string Configuration { get; set; }
+
+        /// <summary>
+        /// Protected Constructor.
+        /// </summary>
+        /// <param name="configuration">A caller provided value. The default is <see cref="Release"/>.</param>
+        protected CompilationManager(string configuration = Release)
+        {
+            Configuration = configuration;
+        }
+
+        /// <summary>
         /// Returns a New <see cref="Guid"/> basis for the Asset Name. In this case,
         /// &quot;Asset&quot; may be a <see cref="Project"/> name, <see cref="Document"/> name,
         /// even <see cref="Solution"/> name, etc.
@@ -60,13 +84,56 @@ namespace Kingdom.Roslyn.Compilation.Services
             .MergeAssets(PreprocessorSymbols.ToArray(), (o, x) => o.WithPreprocessorSymbols(x)
                 , x => x.Any());
 
-        // TODO: TBD: work of origin using this: "SOMETHING_ACTIVE";
         /// <summary>
-        /// Gets any PreprocessorSymbols involved during the Compilation.
+        /// <see cref="PreprocessorSymbols"/> backing field.
         /// </summary>
-        protected virtual IEnumerable<string> PreprocessorSymbols
+        private readonly IList<string> _preprocessorSymbols = new List<string>();
+
+        /// <summary>
+        /// Prepares the <paramref name="symbols"/> for use during the Build cycle.
+        /// </summary>
+        /// <param name="symbols"></param>
+        /// <returns></returns>
+        /// <see cref="Configuration"/>
+        /// <see cref="Debug"/>
+        protected virtual IEnumerable<string> PreparePreprocessorSymbols(IList<string> symbols)
         {
-            get { yield break; }
+            // ReSharper disable once SwitchStatementMissingSomeCases
+            switch (Configuration)
+            {
+                case Debug:
+                    symbols.Add(Debug.ToUpper());
+                    break;
+            }
+
+            return symbols;
+        }
+
+        /// <summary>
+        /// Gets the PreprocessorSymbols for use during the Build cycle.
+        /// </summary>
+        protected IEnumerable<string> PreprocessorSymbols => PreparePreprocessorSymbols(_preprocessorSymbols);
+
+        /// <summary>
+        /// Occurs when it is time to Resolve the <see cref="Project.MetadataReferences"/>
+        /// given the <see cref="Solution"/>.
+        /// </summary>
+        public virtual event EventHandler<ResolveMetadataReferencesEventArgs> ResolveMetadataReferences;
+
+        /// <summary>
+        /// Resolve the <see cref="Project.MetadataReferences"/> as furnished by
+        /// <see cref="ResolveMetadataReferencesEventArgs.MetadataReferences"/>.
+        /// </summary>
+        /// <param name="solution">The <see cref="Solution"/> upon which the resolution is based.</param>
+        /// <param name="project">The <see cref="Project"/> for which the References may occur.</param>
+        /// <returns>A potentially modified <see cref="Solution"/> instance based upon <paramref name="solution"/>.</returns>
+        protected virtual Solution OnResolveMetadataReferences(Solution solution, Project project)
+        {
+            var e = new ResolveMetadataReferencesEventArgs {Solution = solution, Project = project};
+            ResolveMetadataReferences?.Invoke(this, e);
+            // TODO: TBD: may report those references unable to add...
+            return solution.MergeAssets(e.MetadataReferences.ToArray()
+                , (g, x) => g.AddMetadataReferences(e.Project.Id, x), x => x.Any());
         }
 
         /// <summary>
@@ -96,26 +163,13 @@ namespace Kingdom.Roslyn.Compilation.Services
         /// <paramref name="compiling"/>, as well as constituent elements that informed the
         /// request.
         /// </summary>
-        /// <param name="projectName"></param>
-        /// <param name="sources"></param>
-        /// <param name="project"></param>
-        /// <param name="compiling"></param>
-        /// <param name="cancellationToken"></param>
-        [Obsolete("is the projectName/sources version really that necessary after all?")]
-        protected virtual void ResolveCompilation(string projectName, IReadOnlyList<string> sources, Project project
-            , Task<Compilation> compiling, CancellationToken cancellationToken = default)
-        {
-            OnEvaluateCompilation(project, CreateDiagnosticFilter(compiling.Result));
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
         /// <param name="project"></param>
         /// <param name="compiling"></param>
         /// <param name="cancellationToken"></param>
         protected virtual void ResolveCompilation(Project project, Task<Compilation> compiling, CancellationToken cancellationToken = default)
-            => OnEvaluateCompilation(project, CreateDiagnosticFilter(compiling.Result));
+        {
+            OnEvaluateCompilation(project, CreateDiagnosticFilter(compiling.Result));
+        }
 
         /// <summary>
         /// Disposes the Object.

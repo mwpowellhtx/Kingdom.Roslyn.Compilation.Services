@@ -16,13 +16,20 @@ namespace Kingdom.Roslyn.Compilation.Services
     /// intentionally steer clear of introducing any in the way of things like test framework
     /// dependencies as these are really beyond the immediate purview of the compilation manager
     /// itself. We will allow sensible extensibility for this purpose if test framework level
-    /// verification is so desired apart from the exposed <see cref="ResolveMetadataReferences"/>
-    /// and <see cref="CompilationManager.EvaluateCompilation"/> events themselves.
+    /// verification is so desired apart from the exposed
+    /// <see cref="CompilationManager.ResolveMetadataReferences"/> and
+    /// <see cref="CompilationManager.EvaluateCompilation"/> events themselves.
     /// </summary>
     /// <inheritdoc />
     public abstract class CompilationManager<TWorkspace> : CompilationManager
         where TWorkspace : Workspace
     {
+        /// <inheritdoc />
+        protected CompilationManager(string configuration = Release)
+            : base(configuration)
+        {
+        }
+
         // TODO: TBD: do I need to save project(s)/solution from being "adhoc" in order for this to play nicely with CG?
         // TODO: TBD: conversely, how might it be possible to CG using an in-memory Roslyn compilation?
         // TODO: TBD: because dotnet-cgr tooling runs in a process apart from the actual compilation...
@@ -57,28 +64,6 @@ namespace Kingdom.Roslyn.Compilation.Services
         {
             get => _solution ?? (_solution = Workspace.CurrentSolution);
             private set => _solution = value;
-        }
-
-        /// <summary>
-        /// Occurs when it is time to Resolve the <see cref="Project.MetadataReferences"/>
-        /// given the <see cref="Solution"/>.
-        /// </summary>
-        public virtual event EventHandler<ResolveMetadataReferencesEventArgs> ResolveMetadataReferences;
-
-        /// <summary>
-        /// Resolve the <see cref="Project.MetadataReferences"/> as furnished by
-        /// <see cref="ResolveMetadataReferencesEventArgs.MetadataReferences"/>.
-        /// </summary>
-        /// <param name="solution">The <see cref="Solution"/> upon which the resolution is based.</param>
-        /// <param name="project">The <see cref="Project"/> for which the References may occur.</param>
-        /// <returns>A potentially modified <see cref="Solution"/> instance based upon <paramref name="solution"/>.</returns>
-        protected virtual Solution OnResolveMetadataReferences(Solution solution, Project project)
-        {
-            var e = new ResolveMetadataReferencesEventArgs {Solution = solution, Project = project};
-            ResolveMetadataReferences?.Invoke(this, e);
-            // TODO: TBD: may report those references unable to add...
-            return solution.MergeAssets(e.MetadataReferences.ToArray()
-                , (g, x) => g.AddMetadataReferences(project.Id, x), x => x.Any());
         }
 
         /// <summary>
@@ -119,11 +104,19 @@ namespace Kingdom.Roslyn.Compilation.Services
         public virtual void CompileAllProjects()
         {
             // TODO: TBD: not counting build orders?
-            Solution.Projects.ToList().ForEach(
-                p => ResolveCompilation(
-                    p
-                    , p.WithCompilationOptions(CompilationOptions).WithParseOptions(ParseOptions).GetCompilationAsync()
-                )
+            var projects = Solution.Projects;
+
+            projects.ToList().ForEach(
+                p =>
+                {
+                    // TODO: TBD: is this right? resolve the references prior to Compilation resolution?
+                    Solution = OnResolveMetadataReferences(p.Solution, p);
+
+                    ResolveCompilation(
+                        p
+                        , p.WithCompilationOptions(CompilationOptions).WithParseOptions(ParseOptions).GetCompilationAsync()
+                    );
+                }
             );
         }
 
@@ -136,16 +129,8 @@ namespace Kingdom.Roslyn.Compilation.Services
         /// <param name="sources"></param>
         public virtual void Compile(string projectName, params string[] sources)
         {
-            Project CreateProject(out Project project) => project = CreateProjectFromSources(projectName, sources);
-
-            /* TODO: TBD: see also: https://github.com/dotnet/roslyn/issues/32287
-             * Warning AD0001 Analyzer 'Microsoft.CodeAnalysis.CSharp.RemoveUnusedParametersAndValues.CSharpRemoveUnusedParametersAndValuesDiagnosticAnalyzer' threw an exception of type 'System.NullReferenceException'
-             * Presumably receiving this warning on account of this Obsolete method... */
-
-#pragma warning disable 618
-            ResolveCompilation(projectName, sources, CreateProject(out var p), p.GetCompilationAsync());
-#pragma warning restore 618
-
+            var project = CreateProjectFromSources(projectName, sources);
+            ResolveCompilation(project, project.GetCompilationAsync());
         }
 
         /// <summary>
