@@ -1,0 +1,40 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.28307.902
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kingdom.Roslyn.Compilation.Services", "Kingdom.Roslyn.Compilation.Services\Kingdom.Roslyn.Compilation.Services.csproj", "{09A085C9-96E1-4AF8-AB6A-75E66334AC1E}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{917347C5-C0BD-468D-8205-079545F1FBEC}"
+	ProjectSection(SolutionItems) = preProject
+		NuGet.Config = NuGet.Config
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Source", "Source", "{363322FA-257A-4E3A-9147-547B15478F87}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".sln", ".sln", "{58923A44-32A3-467D-8B68-E8A782701C05}"
+	ProjectSection(SolutionItems) = preProject
+		Directory.Build.props = Directory.Build.props
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{09A085C9-96E1-4AF8-AB6A-75E66334AC1E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{09A085C9-96E1-4AF8-AB6A-75E66334AC1E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{09A085C9-96E1-4AF8-AB6A-75E66334AC1E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{09A085C9-96E1-4AF8-AB6A-75E66334AC1E}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{09A085C9-96E1-4AF8-AB6A-75E66334AC1E} = {363322FA-257A-4E3A-9147-547B15478F87}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {04E13DE3-5DB2-4029-91CF-DFBAFA4306F1}
+	EndGlobalSection
+EndGlobal
