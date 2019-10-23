@@ -1,0 +1,37 @@
+<Project>
+
+  <PropertyGroup>
+    <XunitVersion>[2.4.1,3)</XunitVersion>
+    <XunitAnalyzersVersion>[0.10,1)</XunitAnalyzersVersion>
+  </PropertyGroup>
+
+  <!-- ReSharper disable UnknownProperty -->
+  <ItemGroup>
+    <PackageReference Include="xunit" Version="$(XunitVersion)" />
+    <PackageReference Include="xunit.analyzers" Version="$(XunitAnalyzersVersion)" />
+    <PackageReference Include="xunit.runner.console" Version="$(XunitVersion)" Condition="'$(XunitRunner)' == 'console' Or '$(XunitRunner)' == ''">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="xunit.runner.visualstudio" Version="$(XunitVersion)" Condition="'$(XunitRunner)' == 'visualstudio' Or '$(XunitRunner)' == ''">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+  <!-- ReSharper restore UnknownProperty -->
+
+  <PropertyGroup>
+    <XunitFluentlyAssertVersion>[1.3.1,2)</XunitFluentlyAssertVersion>
+    <XunitFluentlyAssertExceptionallyVersion>[1.0,2)</XunitFluentlyAssertExceptionallyVersion>
+    <XunitFluentlyAssertIolyVersion>[1.2,2)</XunitFluentlyAssertIolyVersion>
+    <XunitFluentlyTheoreticallyVersion>[1.0,2)</XunitFluentlyTheoreticallyVersion>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="xunit.fluently.assert" Version="$(XunitFluentlyAssertVersion)" />
+    <PackageReference Include="xunit.fluently.assert.exceptionally" Version="$(XunitFluentlyAssertExceptionallyVersion)" />
+    <PackageReference Include="xunit.fluently.assert.ioly" Version="$(XunitFluentlyAssertIolyVersion)" />
+    <PackageReference Include="xunit.fluently.theoretically" Version="$(XunitFluentlyTheoreticallyVersion)" />
+  </ItemGroup>
+
+</Project>
