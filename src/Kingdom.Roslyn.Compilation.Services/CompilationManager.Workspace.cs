@@ -112,10 +112,13 @@ namespace Kingdom.Roslyn.Compilation.Services
                     // TODO: TBD: is this right? resolve the references prior to Compilation resolution?
                     Solution = OnResolveMetadataReferences(p.Solution, p);
 
-                    ResolveCompilation(
-                        p
-                        , p.WithCompilationOptions(CompilationOptions).WithParseOptions(ParseOptions).GetCompilationAsync()
-                    );
+                    // Which ensures that the Project instance we have is the correct one.
+                    p = Solution.GetProject(p.Id)
+                            .WithCompilationOptions(CompilationOptions)
+                            .WithParseOptions(ParseOptions)
+                        ;
+
+                    ResolveCompilation(p, p.GetCompilationAsync());
                 }
             );
         }

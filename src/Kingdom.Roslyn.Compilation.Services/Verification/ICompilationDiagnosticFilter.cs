@@ -18,12 +18,27 @@ namespace Kingdom.Roslyn.Compilation.Services
     public interface ICompilationDiagnosticFilter : IEnumerable<Diagnostic>
     {
         /// <summary>
+        /// Gets the Project.
+        /// </summary>
+        Project Project { get; }
+
+        /// <summary>
         /// Gets the <see cref="object"/> Compilation. We must get the <see cref="object"/>
         /// because we cannot know whether this was a
         /// <see cref="Microsoft.CodeAnalysis.Compilation"/> or a
         /// <see cref="CompilationWithAnalyzers"/>.
         /// </summary>
         object Compilation { get; }
+
+        /// <summary>
+        /// Gets the ActualCompilation, regardless what the <see cref="Compilation"/> was.
+        /// </summary>
+        Compilation ActualCompilation { get; }
+
+        /// <summary>
+        /// Gets the Configuration used during the Build cycle.
+        /// </summary>
+        string Configuration { get; }
 
         /// <summary>
         /// Returns the <see cref="Compilation"/> in terms of the strongly typed
@@ -37,14 +52,18 @@ namespace Kingdom.Roslyn.Compilation.Services
         T GetCompilation<T>() where T : class;
 
         /// <summary>
-        /// Gets or Sets the Result.
-        /// </summary>
-        EmitResult Result { get; set; }
-
-        /// <summary>
         /// Gets or Sets the <see cref="Predicate{T}"/> used to Filter the <see cref="Diagnostic"/> set.
         /// </summary>
         /// <see cref="DiagnosticPredicate"/>
         DiagnosticPredicate Predicate { get; set; }
+
+        /// <summary>
+        /// Signals to the Filter that the caller would like to Accept the Result.
+        /// The Filter will then Emit the Compilation Result aligned by the Project.
+        /// </summary>
+        /// <param name="result"></param>
+        /// <param name="diagnostics"></param>
+        /// <returns></returns>
+        bool TryAcceptResult(out EmitResult result, out IEnumerable<Diagnostic> diagnostics);
     }
 }

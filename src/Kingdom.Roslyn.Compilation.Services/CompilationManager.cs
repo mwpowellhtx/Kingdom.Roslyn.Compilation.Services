@@ -150,12 +150,12 @@ namespace Kingdom.Roslyn.Compilation.Services
         /// <param name="diagnosticFilter"></param>
         protected virtual void OnEvaluateCompilation(Project project, ICompilationDiagnosticFilter diagnosticFilter)
         {
-            var e = new CompilationDiagnosticEventArgs(project, diagnosticFilter);
+            var e = new CompilationDiagnosticEventArgs(diagnosticFilter);
             EvaluateCompilation?.Invoke(this, e);
         }
 
-        protected virtual ICompilationDiagnosticFilter CreateDiagnosticFilter(Compilation compilation)
-            => new BasicCompilationDiagnosticFilter(compilation);
+        protected virtual ICompilationDiagnosticFilter CreateDiagnosticFilter(Project project, Compilation compilation)
+            => new CompilationDiagnosticFilter(project, Configuration, compilation);
 
         // TODO: TBD: may need to reconsider Task<Compilation> in cases where Analyzers are involved, i.e. Task<CompilationWithAnalyzers> (?)
         /// <summary>
@@ -168,7 +168,7 @@ namespace Kingdom.Roslyn.Compilation.Services
         /// <param name="cancellationToken"></param>
         protected virtual void ResolveCompilation(Project project, Task<Compilation> compiling, CancellationToken cancellationToken = default)
         {
-            OnEvaluateCompilation(project, CreateDiagnosticFilter(compiling.Result));
+            OnEvaluateCompilation(project, CreateDiagnosticFilter(project, compiling.Result));
         }
 
         /// <summary>
