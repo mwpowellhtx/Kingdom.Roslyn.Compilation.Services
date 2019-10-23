@@ -1,0 +1,71 @@
+<Project>
+
+  <PropertyGroup>
+    <LangVersion>7.3</LangVersion>
+    <!-- https://github.com/dotnet/roslyn/issues/32287
+     Warning AD0001 Analyzer 'Microsoft.CodeAnalysis.CSharp.RemoveUnusedParametersAndValues.CSharpRemoveUnusedParametersAndValuesDiagnosticAnalyzer' threw an exception of type 'System.NullReferenceException' -->
+    <NoWarn>AD0001;NU1701</NoWarn>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Platform)' == 'AnyCPU'">
+    <WarningLevel>2</WarningLevel>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <BumpAssemblyVersionsVersion>1.4.0</BumpAssemblyVersionsVersion>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- We are looking for this precise version, because later on we will call out the targets by that same version. -->
+    <PackageReference Include="BumpAssemblyVersions" Version="[$(BumpAssemblyVersionsVersion)]">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+
+  <ItemGroup Condition="Exists('..\packages\BumpAssemblyVersions\$(BumpAssemblyVersionsVersion)\build\BumpAssemblyVersions.targets')">
+    <BumpVersionSpec Include="Version" BuildProviderTemplate="Increment" Condition="'$(Configuration)' == 'Debug'" />
+    <BumpVersionSpec Include="AssemblyVersion" BuildProviderTemplate="Increment" Condition="'$(Configuration)' == 'Debug'" />
+    <BumpVersionSpec Include="FileVersion" BuildProviderTemplate="Increment" Condition="'$(Configuration)' == 'Debug'" />
+    <BumpVersionSpec Include="PackageVersion" BuildProviderTemplate="Increment" Condition="'$(Configuration)' == 'Debug'" />
+  </ItemGroup>
+
+  <!-- ReSharper disable UnknownProperty -->
+  <Target Name="PurgeNuGetArtifactsBeforeBuild" BeforeTargets="BeforeBuild">
+
+    <!-- Reworked how we are doing this using more of a pure Build Task approach.
+     Also important to note, there are differences between Build and Rebuild targets,
+     especially where NuGet Packaging artifacts are concerned, but this appears to cover
+     our bases and avert piling up multiple Specifications and Packages unnecessarily. -->
+
+    <PropertyGroup>
+      <PackageSpecificationOutputPath>obj\$(Configuration)\</PackageSpecificationOutputPath>
+      <NuGetSpecificationWildcard>*.nuspec</NuGetSpecificationWildcard>
+      <NuGetPackageWildcard>*.nupkg</NuGetPackageWildcard>
+      <_DebuggingPurgePreConditionMessages>false</_DebuggingPurgePreConditionMessages>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <!-- Just lump together the generated NuGet Specifications along with the Packages. -->
+      <NuGetArtifactsToPurge Include="$(PackageSpecificationOutputPath)$(NuGetSpecificationWildcard)" />
+      <NuGetArtifactsToPurge Include="$(PackageOutputPath)$(NuGetPackageWildcard)" />
+    </ItemGroup>
+
+    <!-- Useful to report along these lines while we are troubleshooting the Target bits themselves. -->
+    <Message Text="Purging @(NuGetArtifactsToPurge->Count()) $(Configuration) build NuGet artifact(s)." Importance="high" Condition="$(_DebuggingPurgePreConditionMessages) And @(NuGetArtifactsToPurge->Count()) > 0" />
+
+    <Delete Files="@(NuGetArtifactsToPurge)">
+      <Output TaskParameter="DeletedFiles" PropertyName="_PurgedNuGetArtifacts" />
+    </Delete>
+
+    <CreateItem Include="$(_PurgedNuGetArtifacts)">
+      <Output TaskParameter="Include" ItemName="PurgedNuGetArtifacts"/>
+    </CreateItem>
+
+    <!-- Always report that a Purge just took place. -->
+    <Message Text="Purged @(PurgedNuGetArtifacts->Count()) $(Configuration) build NuGet artifact(s)." Importance="high" Condition="@(PurgedNuGetArtifacts->Count()) > 0" />
+
+  </Target>
+  <!-- ReSharper restore UnknownProperty -->
+
+</Project>
