@@ -1,0 +1,8 @@
+.vs/
+
+bin/
+obj/
+packages/
+
+# We do want to allow for Settings files such as these.
+!*.DotSettings
