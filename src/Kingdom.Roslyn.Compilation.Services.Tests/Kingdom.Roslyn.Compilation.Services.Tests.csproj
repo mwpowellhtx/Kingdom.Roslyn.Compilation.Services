@@ -1,0 +1,27 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.1</TargetFramework>
+    <Version>1.0.0.2251</Version>
+    <AssemblyVersion>1.0.0.2251</AssemblyVersion>
+    <FileVersion>1.0.0.2251</FileVersion>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="CodeGeneration\ProjectTemplate.csproj.xml" />
+    <None Remove="Kingdom.Roslyn.Compilation.Services.Tests.csproj.DotSettings" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="CodeGeneration\ProjectTemplate.csproj.xml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Kingdom.Roslyn.Compilation.Services\Kingdom.Roslyn.Compilation.Services.csproj" />
+  </ItemGroup>
+
+  <ImportGroup>
+    <Import Project="..\Unit.Testing.props" />
+  </ImportGroup>
+
+</Project>
