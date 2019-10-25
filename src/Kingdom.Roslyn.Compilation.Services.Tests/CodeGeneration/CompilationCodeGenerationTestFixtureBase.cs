@@ -112,9 +112,12 @@ namespace Kingdom.Roslyn.Compilation.Services.CodeGeneration
 
             bool FilterDiagnosticSeverity(Diagnostic diagnostic) => diagnostic.Severity >= minimumSeverity;
 
-            e.Filter.AssertFalse(x => x.Any());
+            var diagnostics = e.Filter.ToArray();
 
-            e.Filter.Where(FilterDiagnosticSeverity).ToList().ForEach(ReportDiagnostic);
+            diagnostics.Where(FilterDiagnosticSeverity).ToList().ForEach(ReportDiagnostic);
+
+            // TODO: TBD: could filter more based on Severity ...
+            diagnostics.AssertFalse(x => x.Any(y => y.Severity == Error));
         }
 
         // TODO: TBD: may do this on a more case-by-case, Fact-by-Fact, or Theory, basis...
@@ -187,8 +190,12 @@ namespace Kingdom.Roslyn.Compilation.Services.CodeGeneration
                         .AddMembers(
                             ClassDeclaration("Fiz")
                                 .AddModifiers(PublicSyntaxToken, PartialSyntaxToken)
-                                )
-                ));
+                        )
+                )
+                , x => x.AddMembers(
+                    NamespaceDeclaration(IdentifierName("Bar"))
+                )
+            );
         }
 
         protected override void OnDispose(bool disposing)
