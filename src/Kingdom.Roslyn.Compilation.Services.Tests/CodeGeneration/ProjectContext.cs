@@ -33,7 +33,11 @@ namespace Kingdom.Roslyn.Compilation.Services.CodeGeneration
 
         private string _projectName;
 
-        internal string ProjectName => _projectName ?? (_projectName = $"{ProjectGuid:D}");
+        private static string FullAssetName => Path.GetRandomFileName();
+
+        private static string AssetName => Path.GetFileNameWithoutExtension(FullAssetName);
+
+        internal string ProjectName => _projectName ?? (_projectName = AssetName);
 
         private IDictionary<Guid, string> _renderedCompilationUnits;
 
@@ -90,9 +94,9 @@ namespace Kingdom.Roslyn.Compilation.Services.CodeGeneration
                 }
             }
 
-            foreach (var (key, renderedUnit) in RenderedCompilationUnits)
+            foreach (var (_, renderedUnit) in RenderedCompilationUnits)
             {
-                var path = Path.Combine(ProjectDirectory, $"{key:D}{CSharpFileExtension}");
+                var path = Path.Combine(ProjectDirectory, $"{AssetName}{CSharpFileExtension}");
                 RefreshFile(path, renderedUnit);
             }
 
