@@ -153,13 +153,15 @@ namespace Kingdom.Roslyn.Compilation.Services
         protected string PdbOutputPath => Path.Combine(OutputDirectory, $"{Project.Name}{pdb}");
 
         /// <inheritdoc />
-        public bool TryAcceptResult(out EmitResult result, out IEnumerable<Diagnostic> diagnostics)
+        public bool TryAcceptResult(out EmitResult result, DiagnosticSeverity maximumAcceptableSeverity, out IEnumerable<Diagnostic> diagnostics)
         {
             result = null;
 
             diagnostics = Diagnostics.ToArray();
 
-            if (diagnostics.Any())
+            var unacceptable = diagnostics.Where(x => x.Severity > maximumAcceptableSeverity).ToArray();
+
+            if (unacceptable.Any())
             {
                 return false;
             }

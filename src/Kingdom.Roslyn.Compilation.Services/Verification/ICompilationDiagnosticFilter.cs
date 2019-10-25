@@ -62,8 +62,9 @@ namespace Kingdom.Roslyn.Compilation.Services
         /// The Filter will then Emit the Compilation Result aligned by the Project.
         /// </summary>
         /// <param name="result"></param>
+        /// <param name="maximumAcceptableSeverity"></param>
         /// <param name="diagnostics"></param>
         /// <returns></returns>
-        bool TryAcceptResult(out EmitResult result, out IEnumerable<Diagnostic> diagnostics);
+        bool TryAcceptResult(out EmitResult result, DiagnosticSeverity maximumAcceptableSeverity, out IEnumerable<Diagnostic> diagnostics);
     }
 }
