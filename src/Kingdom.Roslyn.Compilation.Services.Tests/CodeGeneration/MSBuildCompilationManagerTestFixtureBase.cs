@@ -1,50 +1,55 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 
-namespace Kingdom.Roslyn.Compilation.Services.CodeGeneration
+namespace Kingdom.Roslyn.Compilation.CodeGeneration
 {
     using Microsoft.Build.Locator;
     using Microsoft.CodeAnalysis.MSBuild;
+    using MSBuild;
+    using Xunit;
     using Xunit.Abstractions;
-    using static Microsoft.Build.Locator.DiscoveryType;
     using static String;
 
-    /// <summary>
-    /// 
-    /// </summary>
-    public class MSBuildCompilationManagerTestFixtureBase : CompilationCodeGenerationTestFixtureBase<MSBuildWorkspace, MSBuildCompilationManager>
+    // ReSharper disable once InconsistentNaming
+    /// <inheritdoc cref="CompilationCodeGenerationTestFixtureBase{TWorkspace,TCompilationManager}" />
+    public abstract class MSBuildCompilationManagerTestFixtureBase
+        : CompilationCodeGenerationTestFixtureBase<MSBuildWorkspace, MSBuildCompilationManager>
     {
-        private static VisualStudioInstance RegisteredInstance { get; }
+        protected override MSBuildCompilationManager CreateCompilationManager() => new MSBuildCompilationManager(Debug);
 
-        private static IEnumerable<VisualStudioInstance> EnumeratedInstances { get; }
+        /// <summary>
+        /// Gets the Registrar.
+        /// </summary>
+        private static IVisualStudioInstanceRegistrar Registrar { get; }
 
         static MSBuildCompilationManagerTestFixtureBase()
         {
-            const DiscoveryType discoveryTypes = DeveloperConsole | DotNetSdk | VisualStudioSetup;
-
-            var options = new VisualStudioInstanceQueryOptions {DiscoveryTypes = discoveryTypes};
-
-            EnumeratedInstances = MSBuildLocator.QueryVisualStudioInstances(options).ToArray();
-
-            // TODO: TBD: are the defaults sufficient here?
-            // TODO: TBD: is there a better way for us to register a specific runtime?
-            RegisteredInstance = MSBuildLocator.RegisterDefaults();
+            // TODO: TBD: not sure there is a great way to watch for this state?
+            // TODO: TBD: in particular what to do when disposing, when to legitimately dispose of the Registrar...
+            Registrar = new VisualStudioInstanceRegistrar();
         }
 
-        protected override MSBuildCompilationManager CreateCompilationManager() => new MSBuildCompilationManager(Debug);
-
-        public MSBuildCompilationManagerTestFixtureBase(ITestOutputHelper outputHelper)
+        /// <summary>
+        /// Constructor.
+        /// </summary>
+        /// <param name="outputHelper"></param>
+        protected MSBuildCompilationManagerTestFixtureBase(ITestOutputHelper outputHelper)
             : base(outputHelper)
         {
-            foreach (var x in EnumeratedInstances)
-            {
-                ReportLocatedBuildInstances(x);
-            }
+            var registrar = Registrar.AssertNotNull();
+            ReportLocatedBuildInstances(registrar.RegisteredInstance.AssertNotNull(), true);
 
-            ReportLocatedBuildInstances(RegisteredInstance, true);
+            foreach (var x in registrar.EnumeratedInstances.AssertNotNull().AssertNotEmpty())
+            {
+                ReportLocatedBuildInstances(x.AssertNotNull());
+            }
         }
 
+        /// <summary>
+        /// Reports the <paramref name="instance"/> and whether <paramref name="registered"/>.
+        /// </summary>
+        /// <param name="instance"></param>
+        /// <param name="registered"></param>
         protected void ReportLocatedBuildInstances(VisualStudioInstance instance, bool registered = false)
         {
             const string curlyBraces = "{}";
@@ -52,8 +57,10 @@ namespace Kingdom.Roslyn.Compilation.Services.CodeGeneration
             var which = registered ? "Registered" : "Available";
 
             string RenderInstance(params Func<VisualStudioInstance, string>[] parts)
-                => Join(Join(", ", parts.Select(x => x.Invoke(instance)))
-                    , $"{curlyBraces.First()} ", $" {curlyBraces.Last()}");
+                => parts.Any()
+                    ? Join(Join(", ", parts.Select(x => x.Invoke(instance)))
+                        , $"{curlyBraces.First()} ", $" {curlyBraces.Last()}")
+                    : Join(" ", $"{curlyBraces.First()}", $"{curlyBraces.Last()}");
 
             var rendered = RenderInstance(
                 x => $"'{nameof(x.DiscoveryType)}': '{x.DiscoveryType}'"
@@ -63,8 +70,17 @@ namespace Kingdom.Roslyn.Compilation.Services.CodeGeneration
                 , x => $"'{nameof(x.VisualStudioRootPath)}': '{x.VisualStudioRootPath}'"
             );
 
-
             OutputHelper.WriteLine($"{which} instance: {rendered}");
+        }
+
+        protected override void OnDispose(bool disposing)
+        {
+            if (disposing && !IsDisposed)
+            {
+                //Registrar?.Dispose();
+            }
+
+            base.OnDispose(disposing);
         }
     }
 }
