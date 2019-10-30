@@ -1,7 +1,7 @@
 ﻿using System.Reflection;
 using System.IO;
 
-namespace Kingdom.Roslyn.Compilation.Services
+namespace Kingdom.Roslyn.Compilation
 {
     /// <summary>
     /// Whether we are talking about Metadata References or actual <see cref="Assembly"/>

@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Text;
 
-namespace Kingdom.Roslyn.Compilation.Services
+namespace Kingdom.Roslyn.Compilation
 {
     using Microsoft.CodeAnalysis;
     using Microsoft.CodeAnalysis.Diagnostics;

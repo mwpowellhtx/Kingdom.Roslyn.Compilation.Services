@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Kingdom.Roslyn.Compilation.Services
+namespace Kingdom.Roslyn.Compilation
 {
     using Microsoft.CodeAnalysis;
 

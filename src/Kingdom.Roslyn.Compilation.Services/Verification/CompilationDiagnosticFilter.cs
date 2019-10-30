@@ -5,7 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 
-namespace Kingdom.Roslyn.Compilation.Services
+namespace Kingdom.Roslyn.Compilation
 {
     using Microsoft.CodeAnalysis;
     using Microsoft.CodeAnalysis.Diagnostics;

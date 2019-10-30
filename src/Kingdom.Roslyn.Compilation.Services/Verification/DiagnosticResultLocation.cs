@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Kingdom.Roslyn.Compilation.Services
+namespace Kingdom.Roslyn.Compilation
 {
     /// <summary>
     /// Location where the diagnostic appears, as determined by the parameters.

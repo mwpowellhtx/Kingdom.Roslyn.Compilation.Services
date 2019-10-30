@@ -1,4 +1,4 @@
-﻿namespace Kingdom.Roslyn.Compilation.Services
+﻿namespace Kingdom.Roslyn.Compilation
 {
     /// <summary>
     /// Callback used when Merging assets.

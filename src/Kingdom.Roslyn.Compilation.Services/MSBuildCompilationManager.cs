@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Kingdom.Roslyn.Compilation.Services
+namespace Kingdom.Roslyn.Compilation
 {
     using Microsoft.CodeAnalysis;
     using Microsoft.CodeAnalysis.MSBuild;
