@@ -7,10 +7,10 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <Version>1.0.1.2269</Version>
-    <AssemblyVersion>1.0.1.2269</AssemblyVersion>
-    <FileVersion>1.0.1.2269</FileVersion>
-    <PackageVersion>1.0.1.2269</PackageVersion>
+    <Version>1.0.1.2274</Version>
+    <AssemblyVersion>1.0.1.2274</AssemblyVersion>
+    <FileVersion>1.0.1.2274</FileVersion>
+    <PackageVersion>1.0.1.2274</PackageVersion>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Platform)' == 'AnyCPU'">
@@ -25,17 +25,16 @@
     <MicrosoftBuildVersion>[15.9.20,16)</MicrosoftBuildVersion>
     <MicrosoftCodeAnalysisCSharpVersion>[2.10,3)</MicrosoftCodeAnalysisCSharpVersion>
     <MicrosoftCodeAnalysisAnalyzersVersion>[2.9.6,3)</MicrosoftCodeAnalysisAnalyzersVersion>
-    <MicrosoftBuildLocatorVersion>[1.2.6,2)</MicrosoftBuildLocatorVersion>
   </PropertyGroup>
 
   <ItemGroup>
-    <!--<PackageReference Include="Microsoft.Build.Locator" Version="*" />-->
-    <!--<PackageReference Include="Microsoft.Build" Version="$(MicrosoftBuildVersion)" />-->
-    <!--<PackageReference Include="Microsoft.Build.Framework" Version="$(MicrosoftBuildVersion)" />-->
-    <PackageReference Include="Microsoft.Build.Locator" Version="$(MicrosoftBuildLocatorVersion)" />
     <PackageReference Include="Microsoft.CodeAnalysis.Analyzers" Version="$(MicrosoftCodeAnalysisAnalyzersVersion)" />
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Workspaces" Version="$(MicrosoftCodeAnalysisCSharpVersion)" />
     <PackageReference Include="Microsoft.CodeAnalysis.Workspaces.MSBuild" Version="$(MicrosoftCodeAnalysisCSharpVersion)" />
   </ItemGroup>
+
+  <ImportGroup>
+    <Import Project="..\Purge.Packaging.Artifacts.props" />
+  </ImportGroup>
 
 </Project>
