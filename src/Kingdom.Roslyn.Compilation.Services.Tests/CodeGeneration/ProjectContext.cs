@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
-namespace Kingdom.Roslyn.Compilation.Services.CodeGeneration
+namespace Kingdom.Roslyn.Compilation.CodeGeneration
 {
     using Microsoft.CodeAnalysis;
     using Microsoft.CodeAnalysis.CSharp.Syntax;
