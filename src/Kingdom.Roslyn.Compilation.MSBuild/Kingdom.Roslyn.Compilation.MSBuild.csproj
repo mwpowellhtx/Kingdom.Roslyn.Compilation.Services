@@ -1,0 +1,33 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.1</TargetFramework>
+    <Version>1.0.0.2277</Version>
+    <AssemblyVersion>1.0.0.2277</AssemblyVersion>
+    <FileVersion>1.0.0.2277</FileVersion>
+    <PackageVersion>1.0.0.2277</PackageVersion>
+  </PropertyGroup>
+
+  <!-- TODO: TBD: today this is .NET Core App 2.1, but we may anticipate multi-targeting this eventually. -->
+  <PropertyGroup Condition="'$(Platform)' == 'AnyCPU'">
+    <DocumentationFile>bin\$(Configuration)\netcoreapp2.1\Kingdom.Roslyn.Compilation.MSBuild.xml</DocumentationFile>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <RootNamespace>Kingdom.Roslyn.Compilation.MSBuild</RootNamespace>
+  </PropertyGroup>
+
+  <ImportGroup>
+    <Import Project="..\Supports.MSBuild.SDK.props" />
+    <Import Project="..\Purge.Packaging.Artifacts.props" />
+  </ImportGroup>
+
+  <ItemGroup>
+    <None Remove="Kingdom.Roslyn.Compilation.MSBuild.csproj.DotSettings" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Kingdom.Roslyn.Compilation.Core\Kingdom.Roslyn.Compilation.Core.csproj" />
+  </ItemGroup>
+
+</Project>
