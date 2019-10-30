@@ -10,7 +10,7 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <RootNamespace>Kingdom.Roslyn.Compilation.Services</RootNamespace>
+    <RootNamespace>Kingdom.Roslyn.Compilation</RootNamespace>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Platform)' == 'AnyCPU'">
@@ -36,42 +36,36 @@
     <BumpVersionSpec Include="PackageVersion" BuildProviderTemplate="Increment" Condition="'$(Configuration)' == 'Debug'" />
   </ItemGroup>
 
-  <!-- ReSharper disable UnknownProperty -->
-  <Target Name="PurgeNuGetArtifactsBeforeBuild" BeforeTargets="BeforeBuild">
+  <!-- ReSharper disable once UnknownProperty -->
+  <ItemGroup Condition="'$(IsInitialRelease)' == 'true' And Exists('..\packages\BumpAssemblyVersions\$(BumpAssemblyVersionsVersion)\build\BumpAssemblyVersions.targets')">
+    <BumpVersionSpec Include="Version" BuildProviderTemplate="SecondsSinceMidnight" Condition="'$(Configuration)' == 'Release'" />
+    <BumpVersionSpec Include="AssemblyVersion" BuildProviderTemplate="SecondsSinceMidnight" Condition="'$(Configuration)' == 'Release'" />
+    <BumpVersionSpec Include="FileVersion" BuildProviderTemplate="SecondsSinceMidnight" Condition="'$(Configuration)' == 'Release'" />
+    <BumpVersionSpec Include="PackageVersion" BuildProviderTemplate="SecondsSinceMidnight" Condition="'$(Configuration)' == 'Release'" />
+  </ItemGroup>
 
-    <!-- Reworked how we are doing this using more of a pure Build Task approach.
-     Also important to note, there are differences between Build and Rebuild targets,
-     especially where NuGet Packaging artifacts are concerned, but this appears to cover
-     our bases and avert piling up multiple Specifications and Packages unnecessarily. -->
+  <!-- ReSharper disable once UnknownProperty -->
+  <ItemGroup Condition="'$(IsPatchRelease)' == 'true' And Exists('..\packages\BumpAssemblyVersions\$(BumpAssemblyVersionsVersion)\build\BumpAssemblyVersions.targets')">
+    <BumpVersionSpec Include="Version" PatchProviderTemplate="Increment" BuildProviderTemplate="SecondsSinceMidnight" Condition="'$(Configuration)' == 'Release'" />
+    <BumpVersionSpec Include="AssemblyVersion" PatchProviderTemplate="Increment" BuildProviderTemplate="SecondsSinceMidnight" Condition="'$(Configuration)' == 'Release'" />
+    <BumpVersionSpec Include="FileVersion" PatchProviderTemplate="Increment" BuildProviderTemplate="SecondsSinceMidnight" Condition="'$(Configuration)' == 'Release'" />
+    <BumpVersionSpec Include="PackageVersion" PatchProviderTemplate="Increment" BuildProviderTemplate="SecondsSinceMidnight" Condition="'$(Configuration)' == 'Release'" />
+  </ItemGroup>
 
-    <PropertyGroup>
-      <PackageSpecificationOutputPath>obj\$(Configuration)\</PackageSpecificationOutputPath>
-      <NuGetSpecificationWildcard>*.nuspec</NuGetSpecificationWildcard>
-      <NuGetPackageWildcard>*.nupkg</NuGetPackageWildcard>
-      <_DebuggingPurgePreConditionMessages>false</_DebuggingPurgePreConditionMessages>
-    </PropertyGroup>
+  <!-- ReSharper disable once UnknownProperty -->
+  <ItemGroup Condition="'$(IsMinorRelease)' == 'true' And Exists('..\packages\BumpAssemblyVersions\$(BumpAssemblyVersionsVersion)\build\BumpAssemblyVersions.targets')">
+    <BumpVersionSpec Include="Version" MinorProviderTemplate="Increment" BuildProviderTemplate="SecondsSinceMidnight" Condition="'$(Configuration)' == 'Release'" />
+    <BumpVersionSpec Include="AssemblyVersion" MinorProviderTemplate="Increment" BuildProviderTemplate="SecondsSinceMidnight" Condition="'$(Configuration)' == 'Release'" />
+    <BumpVersionSpec Include="FileVersion" MinorProviderTemplate="Increment" BuildProviderTemplate="SecondsSinceMidnight" Condition="'$(Configuration)' == 'Release'" />
+    <BumpVersionSpec Include="PackageVersion" MinorProviderTemplate="Increment" BuildProviderTemplate="SecondsSinceMidnight" Condition="'$(Configuration)' == 'Release'" />
+  </ItemGroup>
 
-    <ItemGroup>
-      <!-- Just lump together the generated NuGet Specifications along with the Packages. -->
-      <NuGetArtifactsToPurge Include="$(PackageSpecificationOutputPath)$(NuGetSpecificationWildcard)" />
-      <NuGetArtifactsToPurge Include="$(PackageOutputPath)$(NuGetPackageWildcard)" />
-    </ItemGroup>
-
-    <!-- Useful to report along these lines while we are troubleshooting the Target bits themselves. -->
-    <Message Text="Purging @(NuGetArtifactsToPurge->Count()) $(Configuration) build NuGet artifact(s)." Importance="high" Condition="$(_DebuggingPurgePreConditionMessages) And @(NuGetArtifactsToPurge->Count()) > 0" />
-
-    <Delete Files="@(NuGetArtifactsToPurge)">
-      <Output TaskParameter="DeletedFiles" PropertyName="_PurgedNuGetArtifacts" />
-    </Delete>
-
-    <CreateItem Include="$(_PurgedNuGetArtifacts)">
-      <Output TaskParameter="Include" ItemName="PurgedNuGetArtifacts"/>
-    </CreateItem>
-
-    <!-- Always report that a Purge just took place. -->
-    <Message Text="Purged @(PurgedNuGetArtifacts->Count()) $(Configuration) build NuGet artifact(s)." Importance="high" Condition="@(PurgedNuGetArtifacts->Count()) > 0" />
-
-  </Target>
-  <!-- ReSharper restore UnknownProperty -->
+  <!-- ReSharper disable once UnknownProperty -->
+  <ItemGroup Condition="'$(IsMajorRelease)' == 'true' And Exists('..\packages\BumpAssemblyVersions\$(BumpAssemblyVersionsVersion)\build\BumpAssemblyVersions.targets')">
+    <BumpVersionSpec Include="Version" MajorProviderTemplate="Increment" BuildProviderTemplate="SecondsSinceMidnight" Condition="'$(Configuration)' == 'Release'" />
+    <BumpVersionSpec Include="AssemblyVersion" MajorProviderTemplate="Increment" BuildProviderTemplate="SecondsSinceMidnight" Condition="'$(Configuration)' == 'Release'" />
+    <BumpVersionSpec Include="FileVersion" MajorProviderTemplate="Increment" BuildProviderTemplate="SecondsSinceMidnight" Condition="'$(Configuration)' == 'Release'" />
+    <BumpVersionSpec Include="PackageVersion" MajorProviderTemplate="Increment" BuildProviderTemplate="SecondsSinceMidnight" Condition="'$(Configuration)' == 'Release'" />
+  </ItemGroup>
 
 </Project>
