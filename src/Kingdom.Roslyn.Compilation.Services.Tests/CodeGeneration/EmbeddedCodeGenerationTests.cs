@@ -26,10 +26,11 @@ namespace Kingdom.Roslyn.Compilation.CodeGeneration
         [Fact]
         public void Test_Case_Obviously_Malformed()
         {
+            // TODO: TBD: we are satisfied that the reasons we were here pursuing Roslyn Compilation Services has been completed.
+            // TODO: TBD: what we can stand to do more of next is to work on better arrangement, action, and assertion.
+            // TODO: TBD: but for now we will commit and put it to some use, then apply whatever else we learn on the other side of that.
             var context = AppendContext(
-                new ProjectContext(GetRange(
-                    "namespace Foo { public class Bar { public Bar() }"
-                ))
+                new ProjectContext("namespace Foo { public class Bar { public Bar() }".ToRange())
             );
 
             context.RefreshContents();
