@@ -8,6 +8,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{917347C5-C0BD-468D-8205-079545F1FBEC}"
 	ProjectSection(SolutionItems) = preProject
 		NuGet.Config = NuGet.Config
+		tools\NuGet\publish.cmd = tools\NuGet\publish.cmd
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Source", "Source", "{363322FA-257A-4E3A-9147-547B15478F87}"
@@ -24,9 +25,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{0B457BF2
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kingdom.Roslyn.Compilation.Services.Tests", "Kingdom.Roslyn.Compilation.Services.Tests\Kingdom.Roslyn.Compilation.Services.Tests.csproj", "{FEC3D907-B623-4D65-82A3-655874CC9657}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kingdom.Roslyn.Compilation.MSBuild", "Kingdom.Roslyn.Compilation.MSBuild\Kingdom.Roslyn.Compilation.MSBuild.csproj", "{D331B190-8E82-44F9-AB8E-F59391B01261}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kingdom.Roslyn.Compilation.MSBuild", "Kingdom.Roslyn.Compilation.MSBuild\Kingdom.Roslyn.Compilation.MSBuild.csproj", "{D331B190-8E82-44F9-AB8E-F59391B01261}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kingdom.Roslyn.Compilation.Core", "Kingdom.Roslyn.Compilation.Core\Kingdom.Roslyn.Compilation.Core.csproj", "{90D199DC-08D1-44AF-A528-A8EC25F5C93F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kingdom.Roslyn.Compilation.Core", "Kingdom.Roslyn.Compilation.Core\Kingdom.Roslyn.Compilation.Core.csproj", "{90D199DC-08D1-44AF-A528-A8EC25F5C93F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -41,7 +42,6 @@ Global
 		{FEC3D907-B623-4D65-82A3-655874CC9657}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{FEC3D907-B623-4D65-82A3-655874CC9657}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FEC3D907-B623-4D65-82A3-655874CC9657}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{FEC3D907-B623-4D65-82A3-655874CC9657}.Release|Any CPU.Build.0 = Release|Any CPU
 		{D331B190-8E82-44F9-AB8E-F59391B01261}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{D331B190-8E82-44F9-AB8E-F59391B01261}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D331B190-8E82-44F9-AB8E-F59391B01261}.Release|Any CPU.ActiveCfg = Release|Any CPU
