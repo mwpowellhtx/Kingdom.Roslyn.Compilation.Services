@@ -1,15 +1,32 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
-    <Version>1.0.0.2276</Version>
-    <AssemblyVersion>1.0.0.2276</AssemblyVersion>
-    <FileVersion>1.0.0.2276</FileVersion>
-    <PackageVersion>1.0.0.2276</PackageVersion>
+    <GenerateAssemblyInfo>true</GenerateAssemblyInfo>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
   </PropertyGroup>
 
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <Version>1.0.0.9484</Version>
+    <AssemblyVersion>1.0.0.9484</AssemblyVersion>
+    <FileVersion>1.0.0.9484</FileVersion>
+    <PackageVersion>1.0.0.9484</PackageVersion>
+    <IsInitialRelease>true</IsInitialRelease>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <Description>Provides core Build API that helps bridge the gap for netstandard usage. Ultimately you need to subscribe the netcoreapp, or desired runtime, MSBuild package approaching the a runtime, but this at least provides a netstandard friendly abstraction.</Description>
+    <PackageTags>dotnet; Roslyn; discovery; type; developer; console; dotnet; sdk; VisualStudio; setup; image; selector; predicate; Microsoft; Build; instance; registrar; registered; enumerated; path; name; version; root</PackageTags>
+  </PropertyGroup>
+  
   <ItemGroup>
     <None Remove="Kingdom.Roslyn.Compilation.Core.csproj.DotSettings" />
   </ItemGroup>
+
+  <ImportGroup>
+    <Import Project="..\Purge.Packaging.Artifacts.props" />
+    <Import Project="..\Licensing.props" />
+  </ImportGroup>
 
 </Project>

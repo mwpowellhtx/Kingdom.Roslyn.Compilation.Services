@@ -1,11 +1,23 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
+    <GenerateAssemblyInfo>true</GenerateAssemblyInfo>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
+  </PropertyGroup>
+
+  <PropertyGroup>
     <TargetFramework>netcoreapp2.1</TargetFramework>
-    <Version>1.0.0.2277</Version>
-    <AssemblyVersion>1.0.0.2277</AssemblyVersion>
-    <FileVersion>1.0.0.2277</FileVersion>
-    <PackageVersion>1.0.0.2277</PackageVersion>
+    <Version>1.0.0.9487</Version>
+    <AssemblyVersion>1.0.0.9487</AssemblyVersion>
+    <FileVersion>1.0.0.9487</FileVersion>
+    <PackageVersion>1.0.0.9487</PackageVersion>
+    <IsInitialRelease>true</IsInitialRelease>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <Description>Specializes the MSBuildInstanceRegistrar into the desired applicable runtime. This allows for reliable Visual Studio instance registration, and subsequent Sdk runtime identification.</Description>
+    <PackageTags>dotnet; Roslyn; discovery; type; developer; console; dotnet; sdk; VisualStudio; setup; image; selector; predicate; Microsoft; Build; instance; registrar; registered; enumerated; path; name; version; root</PackageTags>
   </PropertyGroup>
 
   <!-- TODO: TBD: today this is .NET Core App 2.1, but we may anticipate multi-targeting this eventually. -->
@@ -20,6 +32,7 @@
   <ImportGroup>
     <Import Project="..\Supports.MSBuild.SDK.props" />
     <Import Project="..\Purge.Packaging.Artifacts.props" />
+    <Import Project="..\Licensing.props" />
   </ImportGroup>
 
   <ItemGroup>

@@ -1,8 +1,9 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
+    <GenerateAssemblyInfo>true</GenerateAssemblyInfo>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+    <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
   </PropertyGroup>
 
   <PropertyGroup>
@@ -11,10 +12,16 @@
     <AssemblyVersion>1.0.1.2274</AssemblyVersion>
     <FileVersion>1.0.1.2274</FileVersion>
     <PackageVersion>1.0.1.2274</PackageVersion>
+    <BumpInitialRelease>true</BumpInitialRelease>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Platform)' == 'AnyCPU'">
     <DocumentationFile>bin\$(Configuration)\netstandard2.0\Kingdom.Roslyn.Compilation.Services.xml</DocumentationFile>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <Description>Provides a way to organize a cohesive compilation strategy around either ad hoc workspaces or MSBuild workspaces, including source code specification, compilation, and diagnostics evaluation.</Description>
+    <PackageTags>dotnet; Roslyn; Microsoft; Build; compilation; manager; workspace; ad; hoc; can; reference; assembly; add; type; location; based; references; to; by; path; paths; allow; case; sensitivity; sensitive; OS; Linux; Windows; is; platform; properties; dictionary; merge; assets; callback; diagnostic; event; args; resolve; metadata</PackageTags>
   </PropertyGroup>
 
   <ItemGroup>
@@ -35,6 +42,7 @@
 
   <ImportGroup>
     <Import Project="..\Purge.Packaging.Artifacts.props" />
+    <Import Project="..\Licensing.props" />
   </ImportGroup>
 
 </Project>
